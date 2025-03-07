@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .calculatrice {
+            width: 320px;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        #ecran {
+            width: 100%;
+            height: 60px;
+            font-size: 2em;
+            text-align: right;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .boutons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            width: 100%;
+            height: 60px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .chiffre { background: #444; color: white; }
+        .chiffre:hover { background: #555; }
+        .operation { background: orange; color: white; }
+        .operation:hover { background: darkorange; }
+        .special { background: red; color: white; }
+        .special:hover { background: darkred; }
+    </style>
+</head>
+<body>
+
+    <div class="calculatrice">
+        <input type="text" id="ecran" disabled>
+        <div class="boutons">
+            <button class="special" onclick="clearScreen()">C</button>
+            <button class="special" onclick="deleteLast()">DEL</button>
+            <button class="operation" onclick="appendToScreen('%')">%</button>
+            <button class="operation" onclick="appendToScreen('/')">÷</button>
+
+            <button class="chiffre" onclick="appendToScreen('7')">7</button>
+            <button class="chiffre" onclick="appendToScreen('8')">8</button>
+            <button class="chiffre" onclick="appendToScreen('9')">9</button>
+            <button class="operation" onclick="appendToScreen('*')">×</button>
+
+            <button class="chiffre" onclick="appendToScreen('4')">4</button>
+            <button class="chiffre" onclick="appendToScreen('5')">5</button>
+            <button class="chiffre" onclick="appendToScreen('6')">6</button>
+            <button class="operation" onclick="appendToScreen('-')">-</button>
+
+            <button class="chiffre" onclick="appendToScreen('1')">1</button>
+            <button class="chiffre" onclick="appendToScreen('2')">2</button>
+            <button class="chiffre" onclick="appendToScreen('3')">3</button>
+            <button class="operation" onclick="appendToScreen('+')">+</button>
+
+            <button class="chiffre" onclick="appendToScreen('0')">0</button>
+            <button class="chiffre" onclick="appendToScreen('.')">.</button>
+            <button class="operation" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        function appendToScreen(value) {
+            document.getElementById('ecran').value += value;
+        }
+
+        function clearScreen() {
+            document.getElementById('ecran').value = "";
+        }
+
+        function deleteLast() {
+            let ecran = document.getElementById('ecran');
+            ecran.value = ecran.value.slice(0, -1);
+        }
+
+        function calculateResult() {
+            let ecran = document.getElementById('ecran');
+            try {
+               
+                let expression = ecran.value.replace(/×/g, '*').replace(/÷/g, '/');
+                
+               
+                if (/^[0-9+\-*/.% ]+$/.test(expression)) {
+                    ecran.value = Function('"use strict"; return (' + expression + ')')();
+                } else {
+                    throw "Expression invalide";
+                }
+            } catch (error) {
+                ecran.value = "Erreur";
+            }
+        }
+    </script>
+
+</body>
+</html>
